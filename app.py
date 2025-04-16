@@ -2,10 +2,17 @@ import streamlit as st
 import pandas as pd
 import os
 
-def convert_mib_to_gib(mib_value):
-    """Convert MiB to GiB"""
+def convert_mib_to_gb(mib_value):
+    """Convert MiB to GB"""
     try:
-        return round(float(mib_value) / 1024, 2)
+        return round(float(mib_value) / 953.7, 2)
+    except (ValueError, TypeError):
+        return 0
+
+def convert_mb_to_gb(mb_value):
+    """Convert MB to GB"""
+    try:
+        return round(float(mb_value) / 1024, 2)
     except (ValueError, TypeError):
         return 0
 
@@ -67,10 +74,10 @@ def process_rvtools_file(uploaded_file):
             'OS according to the configuration file'
         ]
         
-        # Convert MiB to GiB for memory and disk columns
-        server_list['Memory (GiB)'] = server_list['Memory'].apply(convert_mib_to_gib)
-        server_list['Provisioned Disk (GiB)'] = server_list['Provisioned MB'].apply(convert_mib_to_gib)
-        server_list['In Use Disk (GiB)'] = server_list['In Use MB'].apply(convert_mib_to_gib)
+        # Convert memory (MB to GB) and disk (MiB to GB)
+        server_list['Memory (GB)'] = server_list['Memory'].apply(convert_mb_to_gb)
+        server_list['Provisioned Disk (GB)'] = server_list['Provisioned MB'].apply(convert_mib_to_gb)
+        server_list['In Use Disk (GB)'] = server_list['In Use MB'].apply(convert_mib_to_gb)
         
         # Add new columns
         server_list['In Scope for Prod?'] = ''
@@ -82,9 +89,9 @@ def process_rvtools_file(uploaded_file):
             'VM Name',
             'Powerstate',
             'CPUs',
-            'Memory (GiB)',
-            'Provisioned Disk (GiB)',
-            'In Use Disk (GiB)',
+            'Memory (GB)',
+            'Provisioned Disk (GB)',
+            'In Use Disk (GB)',
             'Cluster',
             'OS according to the configuration file',
             'In Scope for Prod?',
