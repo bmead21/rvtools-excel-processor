@@ -35,8 +35,8 @@ A Streamlit application that processes RVtools Excel files to create a standardi
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/rvtools-processor.git
-cd rvtools-processor
+git clone https://github.com/bmead21/rvtools-excel-processor.git
+cd rvtools-excel-processor
 ```
 
 2. Install dependencies:
