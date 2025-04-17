@@ -125,8 +125,12 @@ def main():
                 st.write("### Processed Server List")
                 st.dataframe(server_list)
                 
-                # Use a generic filename for the download
-                output_filename = "rvtools-processed.xlsx"
+                # Use the original filename with "-processed" appended
+                if hasattr(uploaded_file, 'name') and uploaded_file.name:
+                    base_name = os.path.splitext(uploaded_file.name)[0]
+                    output_filename = f"{base_name}-processed.xlsx"
+                else:
+                    output_filename = "rvtools-processed.xlsx"
                 
                 # Create Excel writer with BytesIO
                 excel_file = io.BytesIO()
