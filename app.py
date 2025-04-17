@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import io
 
 def convert_mib_to_gb(mib_value):
     """Convert MiB to GB"""
@@ -124,21 +125,12 @@ def main():
                 st.write("### Processed Server List")
                 st.dataframe(server_list)
                 
-                # Create output filename based on input filename
-                if not hasattr(uploaded_file, 'name'):
-                    st.error("Uploaded file does not have a name attribute")
-                    return
-                    
-                input_filename = uploaded_file.name
-                if not input_filename:
-                    st.error("Uploaded file name is empty")
-                    return
-                    
-                base_name = os.path.splitext(input_filename)[0]
-                output_filename = f"{base_name}-processed.xlsx"
+                # Use a generic filename for the download
+                output_filename = "rvtools-processed.xlsx"
                 
-                # Add download button
-                output = pd.ExcelWriter(output_filename, engine='openpyxl')
+                # Create Excel writer with BytesIO
+                excel_file = io.BytesIO()
+                output = pd.ExcelWriter(excel_file, engine='openpyxl')
                 
                 # Write the ServerList tab
                 server_list.to_excel(output, sheet_name='ServerList', index=False)
@@ -381,15 +373,23 @@ def main():
                 for col in range(1, len(summary_headers) + 1):
                     summary_ws.column_dimensions[chr(64 + col)].width = 20
                 
-                output.close()
+                # Save to BytesIO instead of a file
+                output.save(excel_file)
+                excel_file.seek(0)
                 
-                with open(output_filename, 'rb') as f:
-                    st.download_button(
-                        label="Download processed Excel file",
-                        data=f,
-                        file_name=output_filename,
-                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                    )
+                # Create download button with the in-memory file
+                st.download_button(
+                    label="Download processed Excel file",
+                    data=excel_file,
+                    file_name=output_filename,
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
+                
+                # Close the BytesIO object
+                excel_file.close()
+                
+                # Close the Excel writer
+                output.close()
         except Exception as e:
             st.error(f"Error processing file: {str(e)}")
 
