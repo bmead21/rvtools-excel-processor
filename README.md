@@ -1,46 +1,66 @@
 # RVtools Excel Processor
 
-This application processes RVtools Excel files and creates a new ServerList tab with specific information extracted from the vInfo tab.
+A Streamlit application that processes RVtools Excel files to create a standardized ServerList tab with additional scope tracking and summary statistics.
 
 ## Features
 
-- Upload RVtools Excel files
-- Extract specific columns from the vInfo tab
-- Convert memory and disk measurements from MiB to GiB
-- Add new columns for scope and notes
-- Download the processed Excel file
+- Processes RVtools Excel files (vInfo tab)
+- Creates a standardized ServerList tab with:
+  - VM Name
+  - Powerstate
+  - CPUs
+  - Memory (GB)
+  - Provisioned Disk (GB)
+  - In Use Disk (GB)
+  - Cluster
+  - OS
+  - Production Scope tracking
+  - DR Scope tracking
+  - Notes
+- Generates a Summary tab with:
+  - Powerstate statistics
+  - Operating System statistics
+  - Production Scope summary
+  - DR Scope summary
+  - Subtotals for each section
+
+## Requirements
+
+- Python 3.8+
+- pandas
+- openpyxl
+- streamlit
 
 ## Installation
 
-1. Clone this repository
-2. Install the required dependencies:
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/rvtools-processor.git
+cd rvtools-processor
+```
+
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
 ## Usage
 
-1. Run the application:
+1. Run the Streamlit app:
 ```bash
 streamlit run app.py
 ```
 
-2. Open your web browser and navigate to the URL shown in the terminal (typically http://localhost:8501)
-3. Upload your RVtools Excel file using the file uploader
-4. View the processed data in the web interface
-5. Download the processed Excel file using the download button
+2. Upload your RVtools Excel file through the web interface
+3. Download the processed Excel file with the new ServerList and Summary tabs
 
-## Output Columns
+## Scope Values
 
-The processed Excel file will contain the following columns:
-- VM Name
-- Powerstate
-- CPUs
-- Memory (GiB)
-- Provisioned Disk (GiB)
-- In Use Disk (GiB)
-- Cluster
-- OS According to the configuration file
-- In Scope for Prod?
-- In Scope for DR?
-- Notes 
+The application recognizes the following values as "In Scope":
+- yes
+- true
+- 1
+- X
+- y
+
+Any other value is considered "Not In Scope". 
