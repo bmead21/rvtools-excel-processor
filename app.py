@@ -373,9 +373,8 @@ def main():
                 for col in range(1, len(summary_headers) + 1):
                     summary_ws.column_dimensions[chr(64 + col)].width = 20
                 
-                # Save to BytesIO instead of a file
-                output.save(excel_file)
-                excel_file.seek(0)
+                # Close the Excel writer to write to the BytesIO object
+                output.close()
                 
                 # Create download button with the in-memory file
                 st.download_button(
@@ -387,9 +386,6 @@ def main():
                 
                 # Close the BytesIO object
                 excel_file.close()
-                
-                # Close the Excel writer
-                output.close()
         except Exception as e:
             st.error(f"Error processing file: {str(e)}")
 
